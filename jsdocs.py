@@ -1150,15 +1150,19 @@ class JsdocsJava(JsdocsParser):
         full_args = group_dict["args"]
         throws = group_dict["throws"] or ""
 
-        arg_list = []
-        for arg in full_args.split(","):
-            arg_list.append(arg.strip().split(" ")[-1])
-        args = ",".join(arg_list)
         throws_list = []
         for arg in throws.split(","):
             throws_list.append(arg.strip().split(" ")[-1])
         throws = ",".join(throws_list)
-        return (name, args, retval, throws)
+        return (name, full_args, retval, throws)
+
+    def parseArgs(self, args):
+        if args.strip() == 'void':
+            return []
+        return super(JsdocsJava, self).parseArgs(args)
+
+    def getArgName(self, arg):
+        return arg.strip().split(" ")[-1]
 
     def parseVar(self, line):
         return None
